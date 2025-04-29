@@ -36,4 +36,17 @@ public class InventoryController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        inventoryService.deleteInventoryById(id);
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Inventory> updateItem(@RequestBody Inventory newItem) {
+    inventoryService.updateInventoryItem(newItem, newItem.getId());
+    return ResponseEntity.ok(newItem);
+    }
+
 }

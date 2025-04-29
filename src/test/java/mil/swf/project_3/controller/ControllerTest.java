@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -68,5 +66,42 @@ public class ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.make").value("Mclaren"));
     }
+
+        @Test
+        void deleteInventoryItemById() throws Exception {
+            when(service.deleteInventoryById(1L)).thenReturn("Item deleted.");
+            mockMvc.perform(delete("/api/carInventory/1"))
+                    .andExpect(status().isNoContent());
+            verify(service).deleteInventoryById(1L);
+        }
+
+//        @Test
+//        void updatesInventoryItem() throws Exception {
+//        Inventory updated = new Inventory("Mclaren", "650S", 2018, 175000.00, true);
+//
+//        when(service.updateInventoryItem(eq(1L), any(Inventory.class))).thenReturn(updated);
+//
+//        mockMvc.perform(put("/carInventory/1")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .contentType(mapper.writeValueAsString(updated)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.price").value(170000.00));
+//        }
+
+    @Test
+    void updatesInventoryItem() throws Exception {
+        Inventory updated = new Inventory("Mclaren", "650S", 2018, 170000.00, true);
+
+        when(service.updateInventoryItem(any(Inventory.class), eq(1L)))
+                .thenReturn(Optional.of(updated));
+
+        mockMvc.perform(put("/api/carInventory/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updated)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.price").value(170000.00));
+    }
+
+
 
 }
