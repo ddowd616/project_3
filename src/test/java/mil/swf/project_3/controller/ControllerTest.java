@@ -10,12 +10,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class ControllerTest {
@@ -43,6 +47,26 @@ public class ControllerTest {
                 .andExpect(status().isCreated());
 
 
+    }
+
+    @Test
+    void fetchInventory() throws Exception {
+        Inventory item1 = new  Inventory("Mclaren", "650S", 2018, 175000.00, true);
+        Inventory item2 = new Inventory("Aston Martin", "vantage", 2020, 200000.00, true);
+        List<Inventory> mockData = new ArrayList<Inventory>(List.of(item1, item2));
+        when(service.getAllInventory()).thenReturn(mockData);
+        mockMvc.perform(get("/api/carInventory")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void getsInventoryItemById() throws Exception {
+        Inventory item = new Inventory("Mclaren", "650S", 2018, 175000.00, true);
+        when(service.getInventoryById(1L)).thenReturn(Optional.of(item));
+
+        mockMvc.perform(get("/api/carInventory/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.make").value("Mclaren"));
     }
 
 }
