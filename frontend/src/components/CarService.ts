@@ -1,5 +1,7 @@
 import {Car} from "../types.ts";
 
+// type FetchCars = () => Promise<Car[]>;
+
 export function fetchCars(): Promise<Car[]>{
     const mockedCars: Car[] = [
         {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, used: true},
@@ -8,3 +10,8 @@ export function fetchCars(): Promise<Car[]>{
     ]
     return Promise.resolve(mockedCars)
 }
+
+// export const fetchCars: FetchCars = () => (
+//     axios.get('/api/car')
+//         .then((r: AxiosResponse<Car[]>) => r.data)
+// )
