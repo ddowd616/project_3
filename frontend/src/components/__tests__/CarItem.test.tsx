@@ -26,4 +26,11 @@ describe('Car Page', () => {
 
     })
 
+    it ('should should be able to see a delete button', async () => {
+
+        expect (screen.getAllByText('Delete')[0]).toBeVisible()
+
+
+    })
+
 })

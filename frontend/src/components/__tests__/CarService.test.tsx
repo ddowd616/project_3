@@ -3,7 +3,7 @@ import {Car} from "../../types.ts";
 import axios from "axios";
 import {setupServer} from "msw/node";
 import {http, HttpResponse} from "msw";
-import {CreateCar, fetchCars} from "../CarService";
+import {CreateCar, deleteCar, fetchCars} from "../CarService";
 
 describe ('Car Service', ()=> {
     axios.defaults.baseURL = "http://localhost:3000"
@@ -30,5 +30,16 @@ describe ('Car Service', ()=> {
         server.use(http.post("api/carInventory", () =>
         HttpResponse.json(MockCar, {status:201})))
         expect(await CreateCar(MockCar)).toStrictEqual(MockCar)
+    })
+
+
+    it("should delete a car object from the database", async() =>{
+        const MockCar: Car = {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, used: true}
+        server.use(http.post("api/carInventory", () =>
+            HttpResponse.json(MockCar, {status:201})))
+
+        server.use(http.delete("api/carInventory/{id}", ()=>
+        HttpResponse.json(MockCar.id, {status:201})))
+        expect(await deleteCar(MockCar.id)).toStrictEqual("item deleted")
     })
 })

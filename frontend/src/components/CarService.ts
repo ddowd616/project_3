@@ -20,3 +20,8 @@ export const fetchCars: FetchCars = () => (
     axios.get('/api/carInventory')
         .then((r: AxiosResponse<Car[]>) => r.data)
 )
+
+export const deleteCar = (id: number|null) => {
+    axios.delete(`api/carInventory/${id}`).then((r:AxiosResponse<Car[]>) => r.data)
+    return "item deleted"
+}
