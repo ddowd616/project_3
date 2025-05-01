@@ -9,7 +9,13 @@ import java.util.Optional;
 
 @Service
 public class InventoryService {
-    InventoryRepository inventoryRepository;
+//    InventoryRepository inventoryRepository;
+
+    private final InventoryRepository inventoryRepository;
+
+    public InventoryService(InventoryRepository inventoryRepository) {
+        this.inventoryRepository = inventoryRepository;
+    }
 
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findAll();
@@ -38,7 +44,7 @@ public class InventoryService {
             tempItem.setModel(itemWithNewValues.getModel());
             tempItem.setPrice(itemWithNewValues.getPrice());
             tempItem.setYear(itemWithNewValues.getYear());
-            tempItem.setUsed(itemWithNewValues.getUsed());
+            tempItem.setUsed(itemWithNewValues.getIsUsed());
             inventoryRepository.save(tempItem);
 
             return Optional.of(tempItem);

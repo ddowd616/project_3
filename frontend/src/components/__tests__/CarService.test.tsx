@@ -3,7 +3,7 @@ import {Car} from "../../types.ts";
 import axios from "axios";
 import {setupServer} from "msw/node";
 import {http, HttpResponse} from "msw";
-import {fetchCars} from "../CarService";
+import {CreateCar, fetchCars} from "../CarService";
 
 describe ('Car Service', ()=> {
     axios.defaults.baseURL = "http://localhost:3000"
@@ -23,5 +23,12 @@ describe ('Car Service', ()=> {
             HttpResponse.json(expected, {status: 201})
         ))
         expect(await fetchCars()).toStrictEqual(expected)
+    })
+
+    it("should send a car object to database", async() => {
+        const MockCar: Car = {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, used: true}
+        server.use(http.post("api/carInventory", () =>
+        HttpResponse.json(MockCar, {status:201})))
+        expect(await CreateCar(MockCar)).toStrictEqual(MockCar)
     })
 })

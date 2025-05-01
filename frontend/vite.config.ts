@@ -14,4 +14,9 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts', // File for test setup (see below)
     css: true, // Optional: Include CSS in tests if needed
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
 })

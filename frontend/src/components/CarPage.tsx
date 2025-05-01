@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Car} from "../types.ts";
-import {fetchCars} from "./CarService.ts";
+import {CreateCar, fetchCars} from "./CarService.ts";
 import {CarItem} from "./CarItem.tsx";
 
 
@@ -18,26 +18,38 @@ const CarPage=()=>{
     const [carList, setCarList] = useState<Car[]>([])
     const [form,setForm] = useState(initalForm)
     const {Make, Model, Year, Price, Used} = form
-    // const [render,setRender] = useState('')
+    const [render,setRender] = useState(false)
+
 
     useEffect(()=>{
         fetchCars().then((r)=>{
             setCarList(r)})
-        },[]);
+        },[render]);
 
     const handleSubmit = (e)=>{
         e.preventDefault();
-        const newCar:Car = {
-            id: null,
+        const newCar: Omit<Car, 'id'> = {
             make: Make,
             model: Model,
             year: Number(Year),
             price: Number(Price),
             used: Used
         }
-        setCarList([...carList, newCar])
+
+        const newCar1: Car = {
+            id : null,
+            make: Make,
+            model: Model,
+            year: Number(Year),
+            price: Number(Price),
+            used: Used
+        }
+
+        CreateCar(newCar).catch(console.error)
+        setCarList([...carList, newCar1])
+        console.log(newCar)
         setForm(initalForm)
-        console.log(carList)
+
     }
 
     const handleChange = (e) => {
@@ -45,7 +57,7 @@ const CarPage=()=>{
             {...form, //spread operator so we dont lose current values
                 [e.target.name]: e.target.value} //integrates current values into prev values
         )
-        console.log(form)
+        // console.log(form)
     }
 
 

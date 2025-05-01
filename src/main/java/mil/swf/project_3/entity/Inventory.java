@@ -66,11 +66,11 @@ public class Inventory {
         this.price = price;
     }
 
-    public Boolean getUsed() {
+    public Boolean getIsUsed() {
         return isUsed;
     }
 
-    public void setUsed(Boolean used) {
-        isUsed = used;
+    public void setUsed(Boolean isUsed) {
+        this.isUsed = isUsed;
     }
 }
