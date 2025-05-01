@@ -33,4 +33,8 @@ describe('Car Page', () => {
 
     })
 
+    it("should be able to see a edit button", async() => {
+        expect (screen.getAllByText("Edit")[0]).toBeVisible()
+    })
+
 })

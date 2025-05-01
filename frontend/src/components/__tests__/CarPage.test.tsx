@@ -4,7 +4,7 @@ import {expect} from "vitest";
 import '@testing-library/jest-dom'
 import CarPage from "../CarPage";
 import {userEvent} from "@testing-library/user-event"
-
+import {fetchCars,CreateCar} from "../CarService"
 
 describe('Car Page', () => {
 
@@ -14,9 +14,17 @@ describe('Car Page', () => {
         })
     }
 
-    // beforeEach(() => {
-    //     render(<CarPage/>)
-    // })
+    beforeEach(() => {
+        vi.spyOn(CarService, 'fetchCars').mockResolvedValue([
+        {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, used: true},
+        {id: 2, make: 'Kia', model: 'Optima', year: 2020, price: 13500, used: true},
+        {id: 3, make: 'Chevy', model: 'Silverado', year: 2025, price: 60000.34, used: false},
+        ]);
+
+        vi.spyOn(CarService, 'CreateCar').mockResolvedValue({
+            id: 3, make: 'Toyota', model: 'Camry', year: 2021, price: 6900, used: true
+        });
+    });
 
 
     it('should see a list of cars', async () => {

@@ -1,12 +1,13 @@
 import {Car} from "../types.ts";
-import {deleteCar} from "./CarService.ts";
+import {deleteCar, editCar} from "./CarService.ts";
 
 type carItemProps={
     car: Car,
-    onDelete
+    onDelete,
+    onEdit
 }
 
-export const CarItem=({car, onDelete}:carItemProps) =>{
+export const CarItem=({car, onDelete, onEdit}:carItemProps) =>{
    return(
        <>
            <h2>{car.make} {car.model}</h2>
@@ -17,6 +18,11 @@ export const CarItem=({car, onDelete}:carItemProps) =>{
                deleteCar(car.id)
                onDelete()
            }}>Delete</button>
+           <button onClick={async()=> {
+               editCar(car.id)
+               onEdit()
+           }}> Edit
+           </button>
        </>
    )
 }

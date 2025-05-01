@@ -75,7 +75,7 @@ const CarPage=()=>{
     return(
         <div>
             <h1>Car Inventory</h1>
-            {carList.map((el, index)=>(<CarItem onDelete={reload} car={el} key={index}/>))}
+            {carList.map((el, index)=>(<CarItem onDelete={reload} onEdit={reload} car={el} key={index}/>))}
             <form onSubmit={handleSubmit}>
                 <input type="text" title={"Make"} placeholder={"Make"} name={'Make'} onChange={handleChange}/>
                 <input type="text" placeholder={"Model"} name={'Model'} onChange={handleChange}/>
