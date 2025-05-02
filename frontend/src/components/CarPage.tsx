@@ -4,7 +4,6 @@ import {CreateCar, fetchCars} from "./CarService.ts";
 import {CarItem} from "./CarItem.tsx";
 
 
-
 const CarPage=()=>{
 
     const initalForm = {
@@ -26,10 +25,8 @@ const CarPage=()=>{
     }
 
 
-
     useEffect(() => {
         let isMounted = true;
-
         fetchCars().then(data => {
             if (isMounted) {
                 setCarList(data);
@@ -42,31 +39,27 @@ const CarPage=()=>{
     }, [render]);
 
 
-
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e)=>{
         e.preventDefault();
         const newCar: Omit<Car, 'id'> = {
             make: Make,
             model: Model,
             year: Number(Year),
             price: Number(Price),
-            used: Used
+            isUsed: Used
         }
-
-
         CreateCar(newCar).catch(console.error)
         fetchCars().then(setCarList)
         reload()
-
-        console.log(newCar)
+        // console.log(newCar)
         setForm(initalForm)
-
+        // console.log(carList)
     }
 
     const handleChange = (e) => {
         setForm(
-            {...form, //spread operator so we dont lose current values
-                [e.target.name]: e.target.value} //integrates current values into prev values
+            {...form,
+                [e.target.name]: e.target.value}
         )
         // console.log(form)
     }
@@ -75,19 +68,18 @@ const CarPage=()=>{
     return(
         <div>
             <h1>Car Inventory</h1>
-            {carList.map((el, index)=>(<CarItem onDelete={reload} onEdit={reload} car={el} key={index}/>))}
             <form onSubmit={handleSubmit}>
-                <input type="text" title={"Make"} placeholder={"Make"} name={'Make'} onChange={handleChange}/>
-                <input type="text" placeholder={"Model"} name={'Model'} onChange={handleChange}/>
-                <input type="number" placeholder={"Year"} name={'Year'} onChange={handleChange}/>
-                <input type="number" placeholder={"Price"} name={'Price'} onChange={handleChange}/>
+                <input type="text" title={"Make"} value={Make} placeholder={"Make"} name={'Make'} onChange={handleChange}/>
+                <input type="text" placeholder={"Model"} value={Model} name={'Model'} onChange={handleChange}/>
+                <input type="number" placeholder={"Year"} value={Year} name={'Year'} onChange={handleChange}/>
+                <input type="number" placeholder={"Price"} value={Price} name={'Price'} onChange={handleChange}/>
                 <label>
                     Used? (y/n)
                 <input type="checkbox" aria-label={"box"} name={'Used'} checked={Used} onChange={(e) => setForm({...form, Used: e.target.checked})}/>
                 </label>
                 <button type={"submit"} aria-label={"addButton"}>Submit</button>
-
             </form>
+            {carList.map((el, index)=>(<CarItem onDelete={reload} car={el} key={index}/>))}
         </div>
     );
 };

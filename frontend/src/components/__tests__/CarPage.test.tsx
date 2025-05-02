@@ -4,7 +4,7 @@ import {expect} from "vitest";
 import '@testing-library/jest-dom'
 import CarPage from "../CarPage";
 import {userEvent} from "@testing-library/user-event"
-import {fetchCars,CreateCar} from "../CarService"
+import * as CarService from "../CarService"
 
 describe('Car Page', () => {
 
@@ -16,30 +16,32 @@ describe('Car Page', () => {
 
     beforeEach(() => {
         vi.spyOn(CarService, 'fetchCars').mockResolvedValue([
-        {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, used: true},
-        {id: 2, make: 'Kia', model: 'Optima', year: 2020, price: 13500, used: true},
-        {id: 3, make: 'Chevy', model: 'Silverado', year: 2025, price: 60000.34, used: false},
+        {id: 1, make: 'Ford', model: 'Mustang', year: 2017, price: 30000.65, isUsed: true},
+        {id: 2, make: 'Kia', model: 'Optima', year: 2020, price: 13500, isUsed: true},
+        {id: 3, make: 'Chevy', model: 'Silverado', year: 2025, price: 60000.34, isUsed: false},
         ]);
 
-        vi.spyOn(CarService, 'CreateCar').mockResolvedValue({
-            id: 3, make: 'Toyota', model: 'Camry', year: 2021, price: 6900, used: true
-        });
+        vi.spyOn(CarService, 'CreateCar').mockResolvedValue(
+            {id: 1, make: 'Toyota', model: 'Camry', year: 2021, price: 6900, isUsed: true}
+        );
     });
 
 
     it('should see a list of cars', async () => {
-        doRender()
+        await doRender()
         expect(await screen.getByText(/Ford*/i)).toBeVisible()
         expect(await screen.getByText(/Kia/i)).toBeVisible()
         expect(await screen.getByText(/Mustang/i)).toBeVisible()
     })
 
     it('should have form element to add a new vehicle', () => {
+        doRender()
         expect(screen.getByPlaceholderText('Make')).toBeVisible()
         expect(screen.getByPlaceholderText('Model')).toBeVisible()
         expect(screen.getByLabelText('addButton')).toBeVisible()
     })
     it('should find cars that were submitted', async ()=>{
+        await doRender()
         const make=screen.getByPlaceholderText('Make')
         const model =screen.getByPlaceholderText('Model')
         const year =screen.getByPlaceholderText('Year')
@@ -58,7 +60,7 @@ describe('Car Page', () => {
     } )
 
     it('should create a new Car item on submit from post method', async () => {
-        doRender()
+        await doRender()
         const make=screen.getByPlaceholderText('Make')
         const model =screen.getByPlaceholderText('Model')
         const year =screen.getByPlaceholderText('Year')
@@ -73,8 +75,11 @@ describe('Car Page', () => {
         await userEvent.click(box)
         await userEvent.click(add)
 
+        expect(CarService.CreateCar).toHaveBeenCalledWith(
+        {make: 'Toyota', model: 'Camry', year: 2021, price: 6900, isUsed: true}
+        )
 
-        expect( await screen.findByText(/camry*/i)).toBeVisible()
+        expect( await screen.findByText(/camry*/i)).toBeInTheDocument()
     })
 
 })

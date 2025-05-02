@@ -13,7 +13,7 @@ type FetchCars = () => Promise<Car[]>;
 // }
 
 export const CreateCar = ( newCar: Omit<Car, 'id'>) => (
-    axios.post("api/carInventory", newCar).then((r:AxiosResponse<Car[]>) => r.data)
+    axios.post("api/carInventory", newCar).then((r:AxiosResponse<Car>) => r.data)
 )
 
 export const fetchCars: FetchCars = () => (
